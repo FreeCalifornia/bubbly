@@ -25,63 +25,66 @@ git clone https://github.com/eustasy/bubbly
 Generate the static keys once per server.
 
 ```
-chmod 755 ~/bubbly/bubbly-generate-statics.sh &&
-~/bubbly/bubbly-generate-statics.sh
+~/bubbly/bubbly_generate-statics.sh
 ```
 
 As it will warn, this will take a while.
 
 Have a seat.
 
-**3. Replace Domains & Configure**
+**3. Copy config blocks**
 
-When you've gone and made something in the 15 minutes that could well take, or you've just set up a new SSH session, replace the instances of `example.com` in the Nginx and Crontab configuration files in `*.conf` with your actual domain name. Also take a look at the `[OPTION]`s and `[WARNING]`s.
-
-```
-nano ~/bubbly/*.conf
-```
-
-**4. Enable Verification**
+When you've gone and made something in the 15 minutes that could well take, or you've just set up a new SSH session, copy the Nginx configuration over to the Nginx area.
 
 ```
-sudo ln -s ~/bubbly/nginx.verify.conf /etc/nginx/sites-enabled/nginx.verify.conf &&
-sudo nginx -t &&
-sudo service nginx reload
+~/bubbly/bubbly_copy-configs.sh
 ```
 
-Alternatively, you can simply copy the location block from `nginx.verify.conf`, if you have an existing site you want to continue working while we upgrade.
+**4. Configure & Enable Verification**
+
+Copy the verification site template and replace the instances of `example.com` in the file with your actual domain name.
+
+```
+sudo cp /etc/nginx/sites-available/bubbly_verify.conf /etc/nginx/sites-available/example.com.conf
+sudo nano /etc/nginx/sites-available/example.com.conf
+sudo ln -s /etc/nginx/sites-available/example.com.conf /etc/nginx/sites-enabled/example.com.conf
+sudo nginx -t && sudo service nginx reload
+```
+
+Alternatively, you can simply add `include location/bubbly_well-known-passthrough.conf;` to an existing site you want to continue working while we upgrade.
+
 
 **5. Fetch Certificates**
 
 Fetch your certificates like this:
 
 ```
-~/bubbly/bubbly-renew-ssl.sh -d example.com -d www.example.com
+~/bubbly/bubbly_renew-ssl.sh -d example.com -d www.example.com
 ```
 
 It will ask for the root password, and an email address, so hang around, it shouldn't take more than a few seconds.
 
 **6. Start using the Certificates**
 
-Now we need to link in the actual site, test it, and reload.
+Remove the verification config you just made, and replace it with a live version of the site. You'll need to more carefully review the `[OPTION]`s in this file, as you'll also need to change the certificate location to match the domain name you requested. Consider taking a look at the `[OPTION]`s and `[WARNING]`s in other linked config files.
 
 ```
-sudo rm /etc/nginx/sites-enabled/nginx.verify.conf &&
-sudo ln -s ~/bubbly/nginx.conf /etc/nginx/sites-enabled/nginx.conf &&
+sudo rm /etc/nginx/sites-available/example.com.conf
+sudo cp /etc/nginx/sites-available/bubbly_live.conf /etc/nginx/sites-available/example.com.conf
+sudo nano /etc/nginx/sites-available/example.com.conf
 sudo nginx -t && sudo service nginx reload
 ```
 
-**6. Automate Renewal**
+**7. Automate Renewal**
 
-Install the edited `crontab.conf` for automatic renewal.
+Edit `crontab.conf` and append it to your existing cron jobs for automatic renewal. This is important, since Let's Encrypt certificates expire in three months.
 
 ```
-cat ~/bubbly/crontab.conf > /tmp/bubbly-crontab &&
-crontab -l >> /tmp/bubbly-crontab &&
+nano ~/bubbly/crontab.conf
+cat ~/bubbly/crontab.conf > /tmp/bubbly-crontab
+crontab -l >> /tmp/bubbly-crontab
 crontab /tmp/bubbly-crontab
 ```
-
-This is important, since Let's Encrypt certificates expire in three months.
 
 ---
 
