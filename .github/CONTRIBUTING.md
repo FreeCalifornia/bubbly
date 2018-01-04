@@ -80,22 +80,24 @@ Various headers are delivered from various configuration files. This list should
 
 - [`nginx-config/directive/bubbly_security-headers.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/directive/bubbly_security-headers.conf)
 - - `Access-Control-Allow-Origin`
-- - `X-Content-Type-Options`
-- - `Frame-Options`
-- - `X-Frame-Options`
-- - `X-XSS-Protection`
+- - `Content-Security-Policy-Report-Only` and `X-Content-Security-Policy-Report-Only` and `X-WebKit-CSP-Report-Only`
+- - `Content-Security-Policy` and `X-Content-Security-Policy` and `X-WebKit-CSP`
+- - `Content-Type-Options` and `X-Content-Type-Options`
+- - `Expect-CT`
+- - `Frame-Options` and `X-Frame-Options`
+- - `Referrer-Policy`
+- - `Server` 
+- - `Strict-Transport-Security`
+- - `XSS-Protection` and `X-XSS-Protection`
 - [`nginx-config/location/h5bp_expires.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/location/h5bp_expires.conf)
 - - `Cache-Control`
 - [`nginx-config/directive/h5bp_x-ua-compatible.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/directive/h5bp_x-ua-compatible.conf)
-- - `X-UA-Compatible`
+- - `UA-Compatible` and `X-UA-Compatible`
 - [`nginx-config/directive/h5bp_no-transform.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/directive/h5bp_no-transform.conf)
 - - `Cache-Control`
-- [`nginx-config/location/h5bp_cross-domain-fonts.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/location/h5bp_cross-domain-fonts.conf)
-- - `Cache-Control`
 - [`nginx-config/location/bubbly_extensionless-php.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/location/bubbly_extensionless-php.conf)
-- - `X-Powered-By`
+- - Suppresses `Powered-By` and `X-Powered-By`
 - [`nginx-config/directive/bubbly_rock-hard-ssl.conf`](https://github.com/eustasy/bubbly/blob/master/nginx-config/directive/bubbly_rock-hard-ssl.conf)
-- - `Strict-Transport-Security`
 
 ## Contact Points
 
